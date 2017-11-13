@@ -13,7 +13,7 @@ Go to this <a href="http://travisdazell.blogspot.hk/2012/11/many-time-pad-attack
 
 You can try this with the following example, they are encrypted with same OTP key.
 
-cipher-text1: "3b101c091d53320c000910"
+cipher-text1: "3b101c091d53320c000910"<br>
 cipher-text2: "071d154502010a04000419"
 
 ## License
