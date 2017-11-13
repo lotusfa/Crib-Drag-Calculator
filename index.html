@@ -1,0 +1,256 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="https://res.cloudinary.com/dcmnwc3ux/image/upload/v1493918347/%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7_2017-05-05_%E4%B8%8A%E5%8D%881.09.00_fnw5k9.png">
+
+    <title>OTP Crack: Crib Drag Calculator</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="https://v4-alpha.getbootstrap.com/examples/sticky-footer/sticky-footer.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <script type="text/javascript">
+      function showT(){
+
+      let x = document.getElementById("tutorial").style.display;
+      console.log(x);
+      if (x == "none" ) x = document.getElementById("tutorial").style.display = "block";
+      else x = document.getElementById("tutorial").style.display = "none";
+    }
+    </script>
+
+    <!-- Begin page content -->
+    <div class="container">
+      <div class="mt-1">
+        <h1>Crib Drag Calculator</h1>
+      </div>
+      <p><a href="https://en.wikipedia.org/wiki/One-time_pad">One-Time Pad (OTP)</a>  is an encryption technique that cannot be cracked, but requires the use of a one-time pre-shared key.</p>
+      <p>So what if we use same key to encrypt two message? The ans is we can decrypte them by using Crib Drag method without the shared key. You can read this <a href="http://travisdazell.blogspot.hk/2012/11/many-time-pad-attack-crib-drag.html"> blogs</a> for more details: 
+      </p>
+      <p>
+      Here is the Crib Drag Calculator. You can try this with the following example, they are encrypted with same OTP key.
+      </p><p>
+      cipher-text1: "3b101c091d53320c000910"
+      <br>
+      cipher-text2: "071d154502010a04000419"
+      </p>
+      </p>
+      <hr>
+      <p>Ciphertext1 (
+      <select id="c1_type">
+        <option value="hex">Hex</option>
+        <option value="ASCII">ASCII</option>
+        <option value="bin">Bin</option>
+      </select>
+      ):
+      <br>
+      <textarea rows="4" cols="50" id="ciphertext_1" onchange="ciphertext_1_change ()" placeholder="Type the Ciphertext1" ></textarea>
+      </p>
+
+      <p>Ciphertext2 (
+      <select id="c2_type" >
+        <option value="hex">Hex</option>
+        <option value="ASCII">ASCII</option>
+        <option value="bin">Bin</option>
+      </select>
+      ):
+      <br>
+      <textarea rows="4" cols="50" id="ciphertext_2" onchange="ciphertext_2_change ()" placeholder="Type the Ciphertext2" ></textarea>
+      </p>
+
+      <p onclick="showT()" > Click me to show the details</p>
+      <div id="tutorial" style="display: none;">
+        <p>CT1 (Hex) = 
+        <br>
+        <textarea rows="2" cols="50" id="ciphertext_1_hex" disabled="true"></textarea>
+        </p>
+        <p>CT2 (Hex) = 
+        <br>
+        <textarea rows="2" cols="50" id="ciphertext_2_hex" disabled="true"></textarea>
+        </p>
+        <p>CT1 (Hex) XOR CT2 (Hex) =
+        <br>
+        <textarea rows="2" cols="50" id="ct1_xor_ct2" disabled="true"></textarea>
+         </p>
+      </div>
+
+      <p>Crib words: <br>
+      <textarea rows="2" cols="50" id="crib_word" placeholder="Guess a word that might appear in one of the messages (ie. 'the ')" onchange="crib_change()" ></textarea>
+      </p>
+      <p>Result: </p>
+      <div id="results">
+        
+      </div>
+
+      <br>
+
+
+
+
+    </div>
+
+    <footer class="footer">
+      <div class="container">
+        <span class="text-muted">Power By: LOTUS FA, <a href="https://lotusfa.com/">lotusfa.com</a></span>
+      </div>
+    </footer>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script type="text/javascript">
+
+      let ct1_hex_arr = [];
+      let ct2_hex_arr = [];
+      let hex1_xor_hex2 = [];
+      let crib_arr = [];
+
+      function ciphertext_1_change () {
+        let type = document.getElementById("c1_type").value ;
+        let string = document.getElementById("ciphertext_1").value ;
+        switch(type) {
+            case "hex":
+              ct1_hex_arr = Hex2HexArr(string);
+                break;
+            case "ASCII":
+              ct1_hex_arr = ASCII2HexArr(string);
+                break;
+            case "bin":
+              ct1_hex_arr = bin2HexArr(string);
+                break;
+        }
+        document.getElementById("ciphertext_1_hex").value = ct1_hex_arr;
+        ct1_xor_ct2_cal ();
+      }
+
+      function ciphertext_2_change () {
+        let type = document.getElementById("c2_type").value ;
+        let string = document.getElementById("ciphertext_2").value ;
+        switch(type) {
+            case "hex":
+              ct2_hex_arr = Hex2HexArr(string);
+                break;
+            case "ASCII":
+              ct2_hex_arr = ASCII2HexArr(string);
+                break;
+            case "bin":
+              ct2_hex_arr = bin2HexArr(string);
+                break;
+        }
+        document.getElementById("ciphertext_2_hex").value = ct2_hex_arr;
+        ct1_xor_ct2_cal ();
+      }
+
+      function ct1_xor_ct2_cal () {
+        let ct1 = ct1_hex_arr;
+        let ct2 = ct2_hex_arr;
+
+        if(ct1.length > 0 && ct2.length > 0){
+          hex1_xor_hex2 = hex_arr_xor_cal (ct1,ct2);
+          document.getElementById("ct1_xor_ct2").value = hex1_xor_hex2;
+        }
+      }
+
+      function Hex2HexArr (st) {
+        let hexString = [];
+
+        if ( st.length%2 != 0 ){
+          console.log("Odd-length string");
+          return hexString;
+        }
+
+        for (var i = 0 ; i < st.length/2 ; i++) {
+          let x = "";
+          x = x + st[(i*2)] + st[(i*2 + 1)];
+          hexString[i] = x;
+        }
+        return hexString;
+      }
+
+      function ASCII2HexArr (st) {
+        let hexString = [];
+        for (var i = 0 ; i < st.length; i++) {
+          //let x = st.charCodeAt(i).toString(16);
+          let x = st.charCodeAt(i).toString(16);
+          hexString[i] = x;
+        }
+        return hexString;
+      }
+
+      function bin2HexArr (st) {
+        if ( st.length%4 != 0 ){
+          console.log("can not devided by 4");
+          return [];
+        }
+
+        let hex = parseInt(st,2).toString(16);
+        Hex2HexArr (hex);
+        let hexString = Hex2HexArr (hex);
+        return hexString;
+      }
+
+      function hex2ASCII(hexx) {
+          var hex = hexx.toString();//force conversion
+          var str = "";
+          for (var i = 0; i < hex.length; i += 2)
+              str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+          return str;
+      }
+
+      function hex_arr_xor_cal (hex1Arr,hex2Arr) {
+        let result = [];
+
+        let hLength = (hex1Arr.length > hex2Arr.length)?hex1Arr.length:hex2Arr.length;
+        for (var i = 0; i < hLength; i++) {
+          result[i] = hex_xor_hex (hex1Arr[i],hex2Arr[i]);
+        }
+        return result;
+      }
+
+      function hex_xor_hex (h1,h2) {
+        let r = (parseInt(h1, 16) ^ parseInt(h2, 16)).toString(16);
+        if (r.length == 1) { r = "0" + r; }
+        return r;
+      }
+
+      function crib_change () {
+        let cribWord = document.getElementById("crib_word").value ;
+
+        crib_arr = ASCII2HexArr (cribWord);
+        if(hex1_xor_hex2.length < 1 ) return;
+
+        let resultLength = hex1_xor_hex2.length - crib_arr.length + 1;
+        let result = [];
+        for (var i = 0; i < resultLength; i++) {
+          let x = "";
+          for (var j = 0; j < crib_arr.length; j++) {
+            x = x + hex_xor_hex (crib_arr [j] ,hex1_xor_hex2 [i+j] );
+          }
+          result[i] = hex2ASCII(x);
+        }
+
+        document.getElementById("results").innerHTML = "";
+        for (var i = 0; i < result.length; i++) {
+          var node = document.createElement("LI");
+            var textnode = document.createTextNode("result["+i+"]: "+result[i]);
+            node.appendChild(textnode);
+            document.getElementById("results").appendChild(node);
+        }
+        
+      }
+
+    </script>
+  </body>
+</html>
