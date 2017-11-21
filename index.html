@@ -11,7 +11,7 @@
     <title>OTP Crack: Crib Drag Calculator</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
 
     <!-- Custom styles for this template -->
     <link href="https://v4-alpha.getbootstrap.com/examples/sticky-footer/sticky-footer.css" rel="stylesheet">
@@ -35,38 +35,39 @@
         <h1>Crib Drag Calculator</h1>
       </div>
       <p><a href="https://en.wikipedia.org/wiki/One-time_pad">One-Time Pad (OTP)</a>  is an encryption technique that cannot be cracked, but requires the use of a one-time pre-shared key.</p>
-      <p>So what if we use same key to encrypt two message? The ans is we can decrypte them by using Crib Drag method without the shared key. You can read this <a href="http://travisdazell.blogspot.hk/2012/11/many-time-pad-attack-crib-drag.html"> blogs</a> for more details: 
-      </p>
-      <p>
-      Here is the Crib Drag Calculator. You can try this with the following example, they are encrypted with same OTP key.
-      </p><p>
-      cipher-text1: "3b101c091d53320c000910"
-      <br>
-      cipher-text2: "071d154502010a04000419"
+      <p>So what if we use same key to encrypt two message? The ans is we can decrypte them by using Crib Drag method without the shared key. You can read this <a href="http://travisdazell.blogspot.hk/2012/11/many-time-pad-attack-crib-drag.html"> blogs</a> for more details. 
       </p>
       </p>
       <hr>
-      <p>Ciphertext1 (
-      <select id="c1_type">
-        <option value="hex">Hex</option>
-        <option value="ASCII">ASCII</option>
-        <option value="bin">Bin</option>
-      </select>
-      ):
-      <br>
-      <textarea rows="4" cols="50" id="ciphertext_1" onchange="ciphertext_1_change ()" placeholder="Type the Ciphertext1" ></textarea>
-      </p>
 
-      <p>Ciphertext2 (
-      <select id="c2_type" >
-        <option value="hex">Hex</option>
-        <option value="ASCII">ASCII</option>
-        <option value="bin">Bin</option>
-      </select>
-      ):
-      <br>
-      <textarea rows="4" cols="50" id="ciphertext_2" onchange="ciphertext_2_change ()" placeholder="Type the Ciphertext2" ></textarea>
-      </p>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Ciphertext1 (
+              <select id="c1_type">
+                <option value="hex">Hex</option>
+                <option value="ASCII">ASCII</option>
+                <option value="bin">Bin</option>
+              </select>
+              ):
+            </label>
+            <textarea class="form-control" rows="5" id="ciphertext_1" onkeyup="ciphertext_1_change ()" placeholder="Type the Ciphertext1" >3b101c091d53320c000910</textarea>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Ciphertext2 (
+              <select id="c2_type" >
+                <option value="hex">Hex</option>
+                <option value="ASCII">ASCII</option>
+                <option value="bin">Bin</option>
+              </select>
+              ):
+            </label>
+            <textarea class="form-control" rows="5" id="ciphertext_2" onkeyup="ciphertext_2_change ()" placeholder="Type the Ciphertext2" >071d154502010a04000419</textarea>
+          </div>
+        </div>
+      </div>
 
       <p onclick="showT()" > Click me to show the details</p>
       <div id="tutorial" style="display: none;">
@@ -85,7 +86,7 @@
       </div>
 
       <p>Crib words: <br>
-      <textarea rows="2" cols="50" id="crib_word" placeholder="Guess a word that might appear in one of the messages (ie. 'the ')" onchange="crib_change()" ></textarea>
+      <textarea rows="2" cols="50" id="crib_word" placeholder="Guess a word that might appear in one of the messages ( ie. type 'the p')" onkeyup="crib_change()" ></textarea>
       </p>
       <p>Result: </p>
       <div id="results">
@@ -105,11 +106,6 @@
       </div>
     </footer>
 
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script type="text/javascript">
 
       let ct1_hex_arr = [];
@@ -227,7 +223,7 @@
 
       function crib_change () {
         let cribWord = document.getElementById("crib_word").value ;
-
+        
         crib_arr = ASCII2HexArr (cribWord);
         if(hex1_xor_hex2.length < 1 ) return;
 
@@ -250,6 +246,20 @@
         }
         
       }
+      ciphertext_1_change ();
+      ciphertext_2_change ();
+    </script>
+
+
+    <!--Google Analysis -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-80492067-1', 'auto');
+      ga('send', 'pageview');
 
     </script>
   </body>
