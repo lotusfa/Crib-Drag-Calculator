@@ -69,6 +69,11 @@
         </div>
       </div>
 
+      <div class="form-group" id="char_set_group">
+        <label for="char_set">Character Set:<br></label>
+        <input type="text" id="char_set" value="a-zA-Z0-9.,?! :;'">
+      </div>
+      
       <p onclick="showT()" > Click me to show the details</p>
       <div id="tutorial" style="display: none;">
         <p>CT1 (Hex) = 
@@ -222,7 +227,8 @@
       }
 
       function crib_change () {
-        let cribWord = document.getElementById("crib_word").value ;
+        let cribWordElem = document.getElementById("crib_word");
+        let cribWord = cribWordElem.value ;
         
         crib_arr = ASCII2HexArr (cribWord);
         if(hex1_xor_hex2.length < 1 ) return;
@@ -237,15 +243,42 @@
           result[i] = hex2ASCII(x);
         }
 
+
+        let charSetElem = document.getElementById('char_set');
+        let charSet = charSetElem.value || 'a-zA-Z0-9.,?! :;\'"';
+        
+        cribWordElem.className = '';
         document.getElementById("results").innerHTML = "";
         for (var i = 0; i < result.length; i++) {
           var node = document.createElement("LI");
-            var textnode = document.createTextNode("result["+i+"]: "+result[i]);
-            node.appendChild(textnode);
-            document.getElementById("results").appendChild(node);
+          var textnode = document.createTextNode("result["+i+"]: "+result[i]);
+          node.appendChild(textnode);
+          
+          try {
+            if (result[i].match(`^[${charSet}]+$`)) {
+              // this result matches the specified char set
+              node.className = 'border border-success';
+              
+              cribWordElem.className = 'text-success border border-success';
+            }
+          }
+          catch(e) {
+            // catch 'Invalid Regex' Errors
+            // console.log('Invalid Regex', e);
+            charSetElem.className = 'text-danger border border-danger';
+          }
+          
+          document.getElementById("results").appendChild(node);
         }
         
       }
+      
+      document.querySelector('#char_set').addEventListener('keyup', () => {
+        let char_set = document.querySelector('input#char_set');
+        char_set.className = '';
+        crib_change();
+      });
+      
       ciphertext_1_change ();
       ciphertext_2_change ();
     </script>
