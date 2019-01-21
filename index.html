@@ -89,6 +89,20 @@
         <textarea rows="2" cols="50" id="ct1_xor_ct2" disabled="true"></textarea>
          </p>
       </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Output 1:</label>
+            <textarea class="form-control" rows="4" id="output_1" readonly></textarea>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Output 2:</label>
+            <textarea class="form-control" rows="4" id="output_2" readonly></textarea>
+          </div>
+        </div>
+      </div>
 
       <p>Crib words: <br>
       <textarea rows="2" cols="50" id="crib_word" placeholder="Guess a word that might appear in one of the messages ( ie. type 'the p')" onkeyup="crib_change()" ></textarea>
@@ -117,6 +131,9 @@
       let ct2_hex_arr = [];
       let hex1_xor_hex2 = [];
       let crib_arr = [];
+      let result_1 = [];
+      let result_2 = [];
+
 
       function ciphertext_1_change () {
         let type = document.getElementById("c1_type").value ;
@@ -133,6 +150,7 @@
                 break;
         }
         document.getElementById("ciphertext_1_hex").value = ct1_hex_arr;
+        init_result_1 (ct1_hex_arr);
         ct1_xor_ct2_cal ();
       }
 
@@ -151,7 +169,18 @@
                 break;
         }
         document.getElementById("ciphertext_2_hex").value = ct2_hex_arr;
+        init_result_2 (ct2_hex_arr);
         ct1_xor_ct2_cal ();
+      }
+
+      function init_result_1 (hex) {
+        result_1 = '.'.repeat(hex.length);
+        document.getElementById("output_1").value = result_1;
+      }
+
+      function init_result_2 (hex) {
+        result_2 = '.'.repeat(hex.length);
+        document.getElementById("output_2").value = result_2;
       }
 
       function ct1_xor_ct2_cal () {
@@ -243,21 +272,43 @@
           result[i] = hex2ASCII(x);
         }
 
-
         let charSetElem = document.getElementById('char_set');
         let charSet = charSetElem.value || 'a-zA-Z0-9.,?! :;\'"';
         
         cribWordElem.className = '';
         document.getElementById("results").innerHTML = "";
         for (var i = 0; i < result.length; i++) {
-          var node = document.createElement("LI");
-          var textnode = document.createTextNode("result["+i+"]: "+result[i]);
-          node.appendChild(textnode);
+
+          let index = i;
+          let r = result[i];
+          let node = document.createElement("LI");
+          let textnode = document.createElement("a");
+          textnode.innerHTML = result[i];
+
+          let buffer = document.createElement("a");
+          buffer.innerHTML = "&ensp;&ensp;&ensp;&ensp;&ensp;";
+
+          let button_1 = document.createElement("button");
+          button_1.innerHTML = "output1";
+          button_1.addEventListener("click", function(){
+              accept_crib(index,r,1);
+          }, false );
+
+          let button_2 = document.createElement("button");
+          button_2.innerHTML = "output2";
+          button_2.addEventListener("click", function(){
+              accept_crib(index,r,2);
+          }, false );
           
+          node.appendChild(textnode);
+          node.appendChild(buffer);
+          node.appendChild(button_1);
+          node.appendChild(button_2);
+
           try {
             if (result[i].match(`^[${charSet}]+$`)) {
               // this result matches the specified char set
-              node.className = 'border border-success';
+              textnode.className = 'border border-success';
               
               cribWordElem.className = 'text-success border border-success';
             }
@@ -278,9 +329,26 @@
         char_set.className = '';
         crib_change();
       });
-      
+
+      function accept_crib(index,value,result_index = 1) {
+        let cribWord = document.getElementById("crib_word").value;
+          let crib_len = cribWord.length;
+          if (result_index == 1) {
+            result_2 = result_2.substr(0, index) + cribWord + result_2.substr(index+crib_len);
+            result_1 = result_1.substr(0, index) + value + result_1.substr(index+crib_len);
+          } else {
+            result_1 = result_1.substr(0, index) + cribWord + result_1.substr(index+crib_len);
+            result_2 = result_2.substr(0, index) + value + result_2.substr(index+crib_len);
+          }
+          document.getElementById('output_1').value = result_1;
+          document.getElementById('output_2').value = result_2;
+      }
+
       ciphertext_1_change ();
       ciphertext_2_change ();
+
+
+
     </script>
 
 
