@@ -303,6 +303,52 @@ textarea[disabled], input[disabled] {
   border-color: #dc3545 !important;
 }
 
+/* Result item styling */
+.result-item {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.result-item:last-child {
+  border-bottom: none;
+}
+
+.result-text {
+  color: #28a745;
+  font-weight: 500;
+}
+
+.result-spacer {
+  flex: 1;
+  margin: 0 10px;
+}
+
+.btn-accept {
+  background: var(--color-btn-bg);
+  border: 1px solid var(--color-btn-border);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: var(--font-sm);
+  margin-right: 8px;
+  transition: background-color 0.2s;
+}
+
+.btn-accept:hover {
+  background: var(--color-btn-hover);
+}
+
+/* Matching result highlight */
+.matching {
+  background: var(--color-bg-secondary);
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  margin: 4px 0;
+}
+
 /* Results list styling */
 #results {
   list-style: none;
@@ -344,6 +390,175 @@ textarea[disabled], input[disabled] {
 
 #results button:hover {
   background: var(--color-btn-hover);
+}
+
+/* Result item styling */
+.result-item {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 8px 0;
+}
+
+.result-item.matching {
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  margin: 4px 0;
+}
+
+.result-text {
+  color: #28a745;
+  font-weight: 500;
+  word-break: break-all;
+}
+
+.result-spacer {
+  flex: 1;
+  min-width: 20px;
+}
+
+.btn-accept {
+  background: var(--color-btn-bg);
+  border: 1px solid var(--color-btn-border);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: var(--font-sm);
+  transition: background-color 0.2s;
+}
+
+.btn-accept:hover {
+  background: var(--color-btn-hover);
+}
+
+.text-success {
+  color: #28a745 !important;
+}
+
+.text-danger {
+  color: #dc3545 !important;
+}
+
+.border-success {
+  border-color: #28a745 !important;
+}
+
+.border-danger {
+  border-color: #dc3545 !important;
+}
+
+/* Text input styling (for character set, crib word) */
+input[type="text"].form-control {
+  width: 100%;
+  padding: 10px;
+  font-size: var(--font-lg);
+  border: 1px solid var(--color-input-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-input-bg);
+  color: var(--color-text);
+}
+
+/* Tutorial section */
+.toggle-tutorial {
+  cursor: pointer;
+  color: var(--color-primary);
+  user-select: none;
+}
+
+.toggle-tutorial:hover {
+  text-decoration: underline;
+}
+
+#tutorial {
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-sm);
+}
+
+#tutorial p {
+  margin: var(--spacing-xs) 0;
+}
+
+#tutorial textarea {
+  font-family: monospace;
+  font-size: var(--font-sm);
+  width: 100%;
+  margin-top: 5px;
+}
+
+/* Type selector styling */
+select.form-control {
+  padding: 8px 12px;
+  font-size: var(--font-lg);
+  border: 1px solid var(--color-input-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-input-bg);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+/* Result item styling */
+.result-item {
+  padding: 10px;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.result-item:last-child {
+  border-bottom: none;
+}
+
+.result-item.matching {
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-sm);
+  margin: 4px 0;
+}
+
+.result-text {
+  color: #28a745;
+  font-weight: 500;
+  word-break: break-all;
+}
+
+.result-spacer {
+  flex: 1;
+  min-width: 30px;
+}
+
+.btn-accept {
+  background: var(--color-btn-bg);
+  border: 1px solid var(--color-btn-border);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: var(--font-sm);
+  transition: background-color 0.2s;
+}
+
+.btn-accept:hover {
+  background: var(--color-btn-hover);
+}
+
+.text-success {
+  color: #28a745 !important;
+}
+
+.text-danger {
+  color: #dc3545 !important;
+}
+
+.border-success {
+  border-color: #28a745 !important;
+}
+
+.border-danger {
+  border-color: #dc3545 !important;
 }
 
 /* Footer - 3 column responsive layout */

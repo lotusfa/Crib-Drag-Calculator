@@ -1,131 +1,134 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="https://res.cloudinary.com/dcmnwc3ux/image/upload/v1493918347/%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7_2017-05-05_%E4%B8%8A%E5%8D%881.09.00_fnw5k9.png">
-
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="OTP Crack: Crib Drag Calculator - Decrypt two One-Time Pad encrypted messages" />
     <title>OTP Crack: Crib Drag Calculator</title>
-
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-
-    <!-- Custom styles for this template -->
-    <link href="https://v4-alpha.getbootstrap.com/examples/sticky-footer/sticky-footer.css" rel="stylesheet">
+    <link rel="icon" href="./favicon.svg" />
+    <link rel="stylesheet" href="./css/styles.css" />
   </head>
-
   <body>
-
-    <script type="text/javascript">
-      function showT(){
-
-      let x = document.getElementById("tutorial").style.display;
-      console.log(x);
-      if (x == "none" ) x = document.getElementById("tutorial").style.display = "block";
-      else x = document.getElementById("tutorial").style.display = "none";
-    }
-    </script>
-
-    <!-- Begin page content -->
-    <div class="container">
-      <div class="mt-1">
+    <div class="header">
+      <div class="titles">
         <h1>Crib Drag Calculator</h1>
+        <h2>OTP Crack Tool</h2>
       </div>
-      <p><a href="https://en.wikipedia.org/wiki/One-time_pad">One-Time Pad (OTP)</a>  is an encryption technique that cannot be cracked, but requires the use of a one-time pre-shared key.</p>
-      <p>So what if we use same key to encrypt two message? The ans is we can decrypte them by using Crib Drag method without the shared key. You can read this <a href="http://travisdazell.blogspot.hk/2012/11/many-time-pad-attack-crib-drag.html"> blogs</a> for more details. 
-      </p>
-      </p>
-      <hr>
+      <button id="dark-mode-toggle" class="btn-theme" aria-label="Toggle dark mode">
+        <img src="./img/dark-mode.svg" class="icon" alt="" />
+      </button>
+    </div>
+    <hr />
 
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form-group">
-            <label>Ciphertext1 (
-              <select id="c1_type">
-                <option value="hex">Hex</option>
-                <option value="ASCII">ASCII</option>
-                <option value="bin">Bin</option>
-              </select>
-              ):
-            </label>
-            <textarea class="form-control" rows="5" id="ciphertext_1" onkeyup="ciphertext_1_change ()" placeholder="Type the Ciphertext1" >3b101c091d53320c000910</textarea>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <label>Ciphertext2 (
-              <select id="c2_type" >
-                <option value="hex">Hex</option>
-                <option value="ASCII">ASCII</option>
-                <option value="bin">Bin</option>
-              </select>
-              ):
-            </label>
-            <textarea class="form-control" rows="5" id="ciphertext_2" onkeyup="ciphertext_2_change ()" placeholder="Type the Ciphertext2" >071d154502010a04000419</textarea>
-          </div>
+    <p>
+      <a href="https://en.wikipedia.org/wiki/One-time_pad" target="_blank" rel="noopener">One-Time Pad (OTP)</a>
+      is an encryption technique that cannot be cracked, but requires the use of a one-time pre-shared key.
+    </p>
+    <p>
+      So what if we use same key to encrypt two message? The answer is we can decrypt them by using
+      <strong>Crib Drag</strong> method without the shared key. Read more about this
+      <a href="http://travisdazell.blogspot.hk/2012/11/many-time-pad-attack-crib-drag.html" target="_blank" rel="noopener">here</a>.
+    </p>
+
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <label>Ciphertext 1</label>
+          <select id="c1_type">
+            <option value="hex">Hex</option>
+            <option value="ASCII">ASCII</option>
+            <option value="bin">Bin</option>
+          </select>
+          <textarea id="ciphertext_1" rows="5" placeholder="Type the Ciphertext 1">3b101c091d53320c000910</textarea>
         </div>
       </div>
 
-      <div class="form-group" id="char_set_group">
-        <label for="char_set">Character Set:<br></label>
-        <input type="text" id="char_set" value="a-zA-Z0-9.,?! :;'">
-      </div>
-      
-      <p onclick="showT()" > Click me to show the details</p>
-      <div id="tutorial" style="display: none;">
-        <p>CT1 (Hex) = 
-        <br>
-        <textarea rows="2" cols="50" id="ciphertext_1_hex" disabled="true"></textarea>
-        </p>
-        <p>CT2 (Hex) = 
-        <br>
-        <textarea rows="2" cols="50" id="ciphertext_2_hex" disabled="true"></textarea>
-        </p>
-        <p>CT1 (Hex) XOR CT2 (Hex) =
-        <br>
-        <textarea rows="2" cols="50" id="ct1_xor_ct2" disabled="true"></textarea>
-         </p>
-      </div>
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form-group">
-            <label>Output 1:</label>
-            <textarea class="form-control" rows="4" id="output_1" readonly></textarea>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <label>Output 2:</label>
-            <textarea class="form-control" rows="4" id="output_2" readonly></textarea>
-          </div>
+      <div class="col">
+        <div class="form-group">
+          <label>Ciphertext 2</label>
+          <select id="c2_type">
+            <option value="hex">Hex</option>
+            <option value="ASCII">ASCII</option>
+            <option value="bin">Bin</option>
+          </select>
+          <textarea id="ciphertext_2" rows="5" placeholder="Type the Ciphertext 2">071d154502010a04000419</textarea>
         </div>
       </div>
-
-      <p>Crib words: <br>
-      <textarea rows="2" cols="50" id="crib_word" placeholder="Guess a word that might appear in one of the messages ( ie. type 'the p')" onkeyup="crib_change()" ></textarea>
-      </p>
-      <p>Result: </p>
-      <div id="results">
-        
-      </div>
-
-      <br>
-
-
-
-
     </div>
 
+    <div class="form-group" id="char_set_group">
+      <label for="char_set">Character Set:</label>
+      <input type="text" id="char_set" value="a-zA-Z0-9.,?! :;'" />
+    </div>
+
+    <p class="toggle-tutorial" onclick="toggleTutorial()">Click to show/hide tutorial</p>
+
+    <div id="tutorial" style="display: none;">
+      <p><strong>CT1 (Hex):</strong></p>
+      <textarea id="ciphertext_1_hex" rows="2" disabled></textarea>
+
+      <p><strong>CT2 (Hex):</strong></p>
+      <textarea id="ciphertext_2_hex" rows="2" disabled></textarea>
+
+      <p><strong>CT1 XOR CT2 (Hex):</strong></p>
+      <textarea id="ct1_xor_ct2" rows="2" disabled></textarea>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <label>Output 1:</label>
+          <textarea id="output_1" rows="4" readonly></textarea>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="form-group">
+          <label>Output 2:</label>
+          <textarea id="output_2" rows="4" readonly></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="crib_word">Crib words:</label>
+      <textarea id="crib_word" rows="2" placeholder="Guess a word that might appear in one of the messages (e.g., type 'the p')"></textarea>
+    </div>
+
+    <p><strong>Result:</strong></p>
+    <ul id="results"></ul>
+
     <footer class="footer">
-      <div class="container">
-        <span class="text-muted">Power By: LOTUS FA, <a href="https://lotusfa.com/">lotusfa.com</a></span>
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Description</h4>
+          <p>This tool helps decrypt two OTP-encrypted messages using the crib drag method when the same key is reused.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Learn More</h4>
+          <ul>
+            <li><a href="https://en.wikipedia.org/wiki/One-time_pad" target="_blank" rel="noopener">Wikipedia: One-Time Pad</a></li>
+            <li><a href="http://travisdazell.blogspot.hk/2012/11/many-time-pad-attack-crib-drag.html" target="_blank" rel="noopener">Crib Drag Attack Explained</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="https://github.com/lotusfa/IPA-Translator" target="_blank" rel="noopener">Related Tools</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>Power By: LOTUS FA - <a href="https://lotusfa.com/" target="_blank" rel="noopener">lotusfa.com</a></p>
       </div>
     </footer>
 
-    <script type="text/javascript">
+    <script type="module">
+      // OTP Crack: Crib Drag Calculator
+      // Core logic - preserved from original implementation
 
       let ct1_hex_arr = [];
       let ct2_hex_arr = [];
@@ -134,221 +137,257 @@
       let result_1 = [];
       let result_2 = [];
 
-
-      function ciphertext_1_change () {
-        let type = document.getElementById("c1_type").value ;
-        let string = document.getElementById("ciphertext_1").value ;
-        switch(type) {
-            case "hex":
-              ct1_hex_arr = Hex2HexArr(string);
-                break;
-            case "ASCII":
-              ct1_hex_arr = ASCII2HexArr(string);
-                break;
-            case "bin":
-              ct1_hex_arr = bin2HexArr(string);
-                break;
-        }
-        document.getElementById("ciphertext_1_hex").value = ct1_hex_arr;
-        init_result_1 (ct1_hex_arr);
-        ct1_xor_ct2_cal ();
-      }
-
-      function ciphertext_2_change () {
-        let type = document.getElementById("c2_type").value ;
-        let string = document.getElementById("ciphertext_2").value ;
-        switch(type) {
-            case "hex":
-              ct2_hex_arr = Hex2HexArr(string);
-                break;
-            case "ASCII":
-              ct2_hex_arr = ASCII2HexArr(string);
-                break;
-            case "bin":
-              ct2_hex_arr = bin2HexArr(string);
-                break;
-        }
-        document.getElementById("ciphertext_2_hex").value = ct2_hex_arr;
-        init_result_2 (ct2_hex_arr);
-        ct1_xor_ct2_cal ();
-      }
-
-      function init_result_1 (hex) {
-        result_1 = '.'.repeat(hex.length);
-        document.getElementById("output_1").value = result_1;
-      }
-
-      function init_result_2 (hex) {
-        result_2 = '.'.repeat(hex.length);
-        document.getElementById("output_2").value = result_2;
-      }
-
-      function ct1_xor_ct2_cal () {
-        let ct1 = ct1_hex_arr;
-        let ct2 = ct2_hex_arr;
-
-        if(ct1.length > 0 && ct2.length > 0){
-          hex1_xor_hex2 = hex_arr_xor_cal (ct1,ct2);
-          document.getElementById("ct1_xor_ct2").value = hex1_xor_hex2;
-        }
-      }
-
-      function Hex2HexArr (st) {
+      // Conversion functions
+      function Hex2HexArr(st) {
         let hexString = [];
-
-        if ( st.length%2 != 0 ){
-          console.log("Odd-length string");
+        if (st.length % 2 !== 0) {
+          console.log('Odd-length string');
           return hexString;
         }
-
-        for (var i = 0 ; i < st.length/2 ; i++) {
-          let x = "";
-          x = x + st[(i*2)] + st[(i*2 + 1)];
-          hexString[i] = x;
+        for (let i = 0; i < st.length / 2; i++) {
+          hexString[i] = st.substr(i * 2, 2);
         }
         return hexString;
       }
 
-      function ASCII2HexArr (st) {
+      function ASCII2HexArr(st) {
         let hexString = [];
-        for (var i = 0 ; i < st.length; i++) {
-          //let x = st.charCodeAt(i).toString(16);
-          let x = st.charCodeAt(i).toString(16);
-          hexString[i] = x;
+        for (let i = 0; i < st.length; i++) {
+          hexString[i] = st.charCodeAt(i).toString(16);
         }
         return hexString;
       }
 
-      function bin2HexArr (st) {
-        if ( st.length%4 != 0 ){
-          console.log("can not devided by 4");
+      function bin2HexArr(st) {
+        if (st.length % 4 !== 0) {
+          console.log('Cannot divide by 4');
           return [];
         }
-
-        let hex = parseInt(st,2).toString(16);
-        Hex2HexArr (hex);
-        let hexString = Hex2HexArr (hex);
-        return hexString;
+        let hex = parseInt(st, 2).toString(16);
+        return Hex2HexArr(hex);
       }
 
       function hex2ASCII(hexx) {
-          var hex = hexx.toString();//force conversion
-          var str = "";
-          for (var i = 0; i < hex.length; i += 2)
-              str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-          return str;
+        let hex = hexx.toString();
+        let str = '';
+        for (let i = 0; i < hex.length; i += 2) {
+          str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+        }
+        return str;
       }
 
-      function hex_arr_xor_cal (hex1Arr,hex2Arr) {
-        let result = [];
+      function hex_xor_hex(h1, h2) {
+        let r = (parseInt(h1, 16) ^ parseInt(h2, 16)).toString(16);
+        if (r.length === 1) {
+          r = '0' + r;
+        }
+        return r;
+      }
 
-        let hLength = (hex1Arr.length > hex2Arr.length)?hex1Arr.length:hex2Arr.length;
-        for (var i = 0; i < hLength; i++) {
-          result[i] = hex_xor_hex (hex1Arr[i],hex2Arr[i]);
+      function hex_arr_xor_cal(hex1Arr, hex2Arr) {
+        let result = [];
+        let hLength = Math.max(hex1Arr.length, hex2Arr.length);
+        for (let i = 0; i < hLength; i++) {
+          result[i] = hex_xor_hex(hex1Arr[i], hex2Arr[i]);
         }
         return result;
       }
 
-      function hex_xor_hex (h1,h2) {
-        let r = (parseInt(h1, 16) ^ parseInt(h2, 16)).toString(16);
-        if (r.length == 1) { r = "0" + r; }
-        return r;
+      // Initialize output textareas
+      function init_result_1(hex) {
+        result_1 = '.'.repeat(hex.length);
+        document.getElementById('output_1').value = result_1;
       }
 
-      function crib_change () {
-        let cribWordElem = document.getElementById("crib_word");
-        let cribWord = cribWordElem.value ;
-        
-        crib_arr = ASCII2HexArr (cribWord);
-        if(hex1_xor_hex2.length < 1 ) return;
+      function init_result_2(hex) {
+        result_2 = '.'.repeat(hex.length);
+        document.getElementById('output_2').value = result_2;
+      }
+
+      // Calculate XOR of two ciphertexts
+      function ct1_xor_ct2_cal() {
+        let ct1 = ct1_hex_arr;
+        let ct2 = ct2_hex_arr;
+        if (ct1.length > 0 && ct2.length > 0) {
+          hex1_xor_hex2 = hex_arr_xor_cal(ct1, ct2);
+          document.getElementById('ct1_xor_ct2').value = hex1_xor_hex2;
+        }
+      }
+
+      // Process crib word and display results
+      function crib_change() {
+        let cribWordElem = document.getElementById('crib_word');
+        let cribWord = cribWordElem.value;
+
+        crib_arr = ASCII2HexArr(cribWord);
+        if (hex1_xor_hex2.length < 1) return;
 
         let resultLength = hex1_xor_hex2.length - crib_arr.length + 1;
         let result = [];
-        for (var i = 0; i < resultLength; i++) {
-          let x = "";
-          for (var j = 0; j < crib_arr.length; j++) {
-            x = x + hex_xor_hex (crib_arr [j] ,hex1_xor_hex2 [i+j] );
+        for (let i = 0; i < resultLength; i++) {
+          let x = '';
+          for (let j = 0; j < crib_arr.length; j++) {
+            x = x + hex_xor_hex(crib_arr[j], hex1_xor_hex2[i + j]);
           }
           result[i] = hex2ASCII(x);
         }
 
         let charSetElem = document.getElementById('char_set');
-        let charSet = charSetElem.value || 'a-zA-Z0-9.,?! :;\'"';
-        
+        let charSet = charSetElem.value || "a-zA-Z0-9.,?! :;'";
+
         cribWordElem.className = '';
-        document.getElementById("results").innerHTML = "";
-        for (var i = 0; i < result.length; i++) {
+        document.getElementById('results').innerHTML = '';
 
-          let index = i;
-          let r = result[i];
-          let node = document.createElement("LI");
-          let textnode = document.createElement("a");
-          textnode.innerHTML = result[i];
-
-          let buffer = document.createElement("a");
-          buffer.innerHTML = "&ensp;&ensp;&ensp;&ensp;&ensp;";
-
-          let button_1 = document.createElement("button");
-          button_1.innerHTML = "output1";
-          button_1.addEventListener("click", function(){
-              accept_crib(index,r,1);
-          }, false );
-
-          let button_2 = document.createElement("button");
-          button_2.innerHTML = "output2";
-          button_2.addEventListener("click", function(){
-              accept_crib(index,r,2);
-          }, false );
-          
-          node.appendChild(textnode);
-          node.appendChild(buffer);
-          node.appendChild(button_1);
-          node.appendChild(button_2);
+        for (let i = 0; i < result.length; i++) {
+          let li = document.createElement('li');
+          li.className = 'result-item';
+          let match = false;
 
           try {
-            if (result[i].match(`^[${charSet}]+$`)) {
-              // this result matches the specified char set
-              textnode.className = 'border border-success';
-              
-              cribWordElem.className = 'text-success border border-success';
+            if (result[i].match(new RegExp(`^[${charSet}]+$`))) {
+              match = true;
+              li.classList.add('matching');
+              cribWordElem.classList.add('text-success', 'border-success');
             }
+          } catch (e) {
+            cribWordElem.classList.add('text-danger', 'border-danger');
           }
-          catch(e) {
-            // catch 'Invalid Regex' Errors
-            // console.log('Invalid Regex', e);
-            charSetElem.className = 'text-danger border border-danger';
+
+          let textSpan = document.createElement('span');
+          textSpan.textContent = result[i];
+          if (match) {
+            textSpan.classList.add('result-text');
           }
-          
-          document.getElementById("results").appendChild(node);
+          li.appendChild(textSpan);
+
+          let spacer = document.createElement('span');
+          spacer.className = 'result-spacer';
+          li.appendChild(spacer);
+
+          let btn1 = document.createElement('button');
+          btn1.textContent = 'output1';
+          btn1.className = 'btn-accept';
+          btn1.addEventListener('click', () => accept_crib(i, result[i], 1));
+
+          let btn2 = document.createElement('button');
+          btn2.textContent = 'output2';
+          btn2.className = 'btn-accept';
+          btn2.addEventListener('click', () => accept_crib(i, result[i], 2));
+
+          li.appendChild(btn1);
+          li.appendChild(btn2);
+
+          document.getElementById('results').appendChild(li);
         }
-        
       }
-      
-      document.querySelector('#char_set').addEventListener('keyup', () => {
-        let char_set = document.querySelector('input#char_set');
-        char_set.className = '';
-        crib_change();
+
+      // Accept crib and update outputs
+      function accept_crib(index, value, result_index = 1) {
+        let cribWord = document.getElementById('crib_word').value;
+        let crib_len = cribWord.length;
+
+        if (result_index === 1) {
+          result_2 = result_2.substr(0, index) + cribWord + result_2.substr(index + crib_len);
+          result_1 = result_1.substr(0, index) + value + result_1.substr(index + crib_len);
+        } else {
+          result_1 = result_1.substr(0, index) + cribWord + result_1.substr(index + crib_len);
+          result_2 = result_2.substr(0, index) + value + result_2.substr(index + crib_len);
+        }
+
+        document.getElementById('output_1').value = result_1;
+        document.getElementById('output_2').value = result_2;
+      }
+
+      // Event listeners for ciphertext inputs
+      function processCiphertext1() {
+        let type = document.getElementById('c1_type').value;
+        let string = document.getElementById('ciphertext_1').value;
+
+        switch (type) {
+          case 'hex':
+            ct1_hex_arr = Hex2HexArr(string);
+            break;
+          case 'ASCII':
+            ct1_hex_arr = ASCII2HexArr(string);
+            break;
+          case 'bin':
+            ct1_hex_arr = bin2HexArr(string);
+            break;
+        }
+
+        document.getElementById('ciphertext_1_hex').value = ct1_hex_arr;
+        init_result_1(ct1_hex_arr);
+        ct1_xor_ct2_cal();
+      }
+
+      function processCiphertext2() {
+        let type = document.getElementById('c2_type').value;
+        let string = document.getElementById('ciphertext_2').value;
+
+        switch (type) {
+          case 'hex':
+            ct2_hex_arr = Hex2HexArr(string);
+            break;
+          case 'ASCII':
+            ct2_hex_arr = ASCII2HexArr(string);
+            break;
+          case 'bin':
+            ct2_hex_arr = bin2HexArr(string);
+            break;
+        }
+
+        document.getElementById('ciphertext_2_hex').value = ct2_hex_arr;
+        init_result_2(ct2_hex_arr);
+        ct1_xor_ct2_cal();
+      }
+
+      // Attach event listeners
+      document.getElementById('ciphertext_1').addEventListener('input', processCiphertext1);
+      document.getElementById('ciphertext_2').addEventListener('input', processCiphertext2);
+      document.getElementById('c1_type').addEventListener('change', processCiphertext1);
+      document.getElementById('c2_type').addEventListener('change', processCiphertext2);
+      document.getElementById('crib_word').addEventListener('input', crib_change);
+      document.getElementById('char_set').addEventListener('input', () => crib_change());
+
+      // Initialize on load
+      processCiphertext1();
+      processCiphertext2();
+    </script>
+
+    <script>
+      // Tutorial toggle function (global scope for onclick)
+      function toggleTutorial() {
+        let tutorial = document.getElementById('tutorial');
+        tutorial.style.display = tutorial.style.display === 'none' ? 'block' : 'none';
+      }
+
+      // Dark mode toggle
+      const darkModeToggle = document.getElementById('dark-mode-toggle');
+      const darkModeIcon = darkModeToggle.querySelector('.icon');
+      const darkModeSVG = new Image();
+      darkModeSVG.src = './img/dark-mode.svg';
+      const lightModeSVG = new Image();
+      lightModeSVG.src = './img/light-mode.svg';
+
+      // Check for saved dark mode preference
+      const isDarkMode = localStorage.getItem('darkMode') === 'enabled';
+      if (isDarkMode) {
+        document.body.classList.add('dark-mode');
+        darkModeToggle.innerHTML = `<img src="./img/light-mode.svg" class="icon" alt="">`;
+      }
+
+      darkModeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+
+        if (isDark) {
+          darkModeToggle.innerHTML = `<img src="./img/light-mode.svg" class="icon" alt="">`;
+          localStorage.setItem('darkMode', 'enabled');
+        } else {
+          darkModeToggle.innerHTML = `<img src="./img/dark-mode.svg" class="icon" alt="">`;
+          localStorage.setItem('darkMode', 'disabled');
+        }
       });
-
-      function accept_crib(index,value,result_index = 1) {
-        let cribWord = document.getElementById("crib_word").value;
-          let crib_len = cribWord.length;
-          if (result_index == 1) {
-            result_2 = result_2.substr(0, index) + cribWord + result_2.substr(index+crib_len);
-            result_1 = result_1.substr(0, index) + value + result_1.substr(index+crib_len);
-          } else {
-            result_1 = result_1.substr(0, index) + cribWord + result_1.substr(index+crib_len);
-            result_2 = result_2.substr(0, index) + value + result_2.substr(index+crib_len);
-          }
-          document.getElementById('output_1').value = result_1;
-          document.getElementById('output_2').value = result_2;
-      }
-
-      ciphertext_1_change ();
-      ciphertext_2_change ();
-
-
-
     </script>
   </body>
 </html>
