@@ -8,6 +8,7 @@ export function initDarkModeToggle() {
   const isDarkMode = localStorage.getItem('darkMode') === 'enabled';
   if (isDarkMode) {
     document.body.classList.add('dark-mode');
+    // In dark mode, show light-mode icon (sun)
     darkModeToggle.innerHTML = `<img src="./img/light-mode.svg" class="icon" alt="">`;
   }
 
@@ -16,9 +17,11 @@ export function initDarkModeToggle() {
     const isDark = document.body.classList.contains('dark-mode');
 
     if (isDark) {
+      // Dark mode active - show light-mode icon (sun)
       darkModeToggle.innerHTML = `<img src="./img/light-mode.svg" class="icon" alt="">`;
       localStorage.setItem('darkMode', 'enabled');
     } else {
+      // Light mode active - show dark-mode icon (moon)
       darkModeToggle.innerHTML = `<img src="./img/dark-mode.svg" class="icon" alt="">`;
       localStorage.setItem('darkMode', 'disabled');
     }

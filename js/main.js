@@ -232,3 +232,6 @@ export function toggleTutorial() {
   let tutorial = document.getElementById('tutorial');
   tutorial.style.display = tutorial.style.display === 'none' ? 'block' : 'none';
 }
+
+// Initialize on DOMContentLoaded
+document.addEventListener('DOMContentLoaded', init);
