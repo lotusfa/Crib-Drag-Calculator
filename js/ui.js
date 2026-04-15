@@ -28,20 +28,48 @@ export function initDarkModeToggle() {
   });
 }
 
-// Tutorial toggle
+// Tutorial toggle with expandable section
 export function initTutorialToggle() {
   const toggleBtn = document.getElementById('toggle-tutorial');
-  const tutorial = document.getElementById('tutorial');
+  const tutorialSection = document.getElementById('tutorial-section');
 
   toggleBtn.addEventListener('click', () => {
+    const tutorial = document.getElementById('tutorial');
+    const icon = toggleBtn.querySelector('.expandable-icon');
+
     tutorial.classList.toggle('hidden');
+
+    const isExpanded = !tutorial.classList.contains('hidden');
+    toggleBtn.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+    icon.textContent = isExpanded ? '−' : '+';
   });
+}
+
+// Character set type selector
+export function initCharSetType() {
+  const charSetType = document.getElementById('char_set_type');
+  const charSet = document.getElementById('char_set');
+
+  const presets = {
+    'common': "a-zA-Z0-9.,?! :;'",
+    'alphanumeric': 'a-zA-Z0-9',
+    'letters': 'a-zA-Z',
+    'custom': ''
+  };
+
+  if (charSetType && charSet) {
+    charSetType.addEventListener('change', (e) => {
+      charSet.value = presets[e.target.value] || '';
+      charSet.focus();
+    });
+  }
 }
 
 // Initialize all UI components
 export function initUI() {
   initDarkModeToggle();
   initTutorialToggle();
+  initCharSetType();
 }
 
 // Run on DOMContentLoaded

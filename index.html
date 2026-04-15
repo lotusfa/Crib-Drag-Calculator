@@ -64,22 +64,42 @@
       </div>
     </div>
 
-    <div class="form-group" id="char_set_group">
-      <label for="char_set">Character Set:</label>
+    <div class="form-group">
+      <label>
+        Character Set:
+        <span class="inline-select">
+          <select id="char_set_type">
+            <option value="common">Common</option>
+            <option value="alphanumeric">Alphanumeric</option>
+            <option value="letters">Letters Only</option>
+            <option value="custom">Custom</option>
+          </select>
+        </span>
+      </label>
       <input type="text" id="char_set" value="a-zA-Z0-9.,?! :;'" />
     </div>
 
-    <p class="toggle-tutorial" id="toggle-tutorial">Click to show/hide tutorial</p>
-
-    <div id="tutorial" class="hidden">
-      <p><strong>CT1 (Hex):</strong></p>
-      <textarea id="ciphertext_1_hex" rows="2" disabled></textarea>
-
-      <p><strong>CT2 (Hex):</strong></p>
-      <textarea id="ciphertext_2_hex" rows="2" disabled></textarea>
-
-      <p><strong>CT1 XOR CT2 (Hex):</strong></p>
-      <textarea id="ct1_xor_ct2" rows="2" disabled></textarea>
+    <div class="expandable-section" id="tutorial-section">
+      <button class="expandable-header" id="toggle-tutorial">
+        <span>Tutorial</span>
+        <span class="expandable-icon">+</span>
+      </button>
+      <div id="tutorial" class="expandable-content hidden">
+        <div class="tutorial-grid">
+          <div class="tutorial-item">
+            <label>CT1 (Hex):</label>
+            <textarea id="ciphertext_1_hex" rows="2" disabled></textarea>
+          </div>
+          <div class="tutorial-item">
+            <label>CT2 (Hex):</label>
+            <textarea id="ciphertext_2_hex" rows="2" disabled></textarea>
+          </div>
+          <div class="tutorial-item full-width">
+            <label>CT1 XOR CT2 (Hex):</label>
+            <textarea id="ct1_xor_ct2" rows="2" disabled></textarea>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="row">

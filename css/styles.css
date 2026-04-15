@@ -228,6 +228,12 @@ textarea.form-control, input.form-control, select.form-control {
 textarea.form-control {
   resize: vertical;
   line-height: 1.4;
+  min-height: 120px;
+}
+
+/* Auto-expand textarea height based on content */
+textarea.form-control[rows] {
+  min-height: calc(var(--font-lg) * var(--line-height-normal, 1.5) * attr(rows, number, 1));
 }
 
 textarea[disabled], input[disabled] {
@@ -236,7 +242,7 @@ textarea[disabled], input[disabled] {
 }
 
 .form-group {
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
 }
 
 .form-group label {
@@ -246,6 +252,10 @@ textarea[disabled], input[disabled] {
   gap: 8px;
   margin-bottom: var(--spacing-xs);
   font-weight: 500;
+}
+
+.form-group textarea, .form-group input[type="text"] {
+  width: 100%;
 }
 
 .inline-select select {
@@ -325,6 +335,86 @@ textarea[disabled], input[disabled] {
 
 .border-danger {
   border-color: #dc3545 !important;
+}
+
+/* Expandable section (tutorial, etc.) */
+.expandable-section {
+  margin: var(--spacing-md) 0;
+}
+
+.expandable-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: var(--font-sm);
+  font-weight: 500;
+  color: var(--color-text);
+  transition: background-color 0.2s;
+  user-select: none;
+}
+
+.expandable-header:hover {
+  background: var(--color-btn-hover);
+}
+
+.expandable-header .expandable-icon {
+  font-weight: bold;
+  font-size: var(--font-xl);
+  line-height: 1;
+  transition: transform 0.3s;
+}
+
+.expandable-section[aria-expanded="true"] .expandable-header .expandable-icon {
+  transform: rotate(45deg);
+}
+
+/* Expandable content */
+.expandable-content {
+  padding: var(--spacing-md);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-top: none;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+}
+
+.expandable-content.hidden {
+  display: none;
+}
+
+/* Tutorial grid layout */
+.tutorial-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+}
+
+.tutorial-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.tutorial-item.full-width {
+  grid-column: 1 / -1;
+}
+
+.tutorial-item label {
+  font-weight: 500;
+  margin-bottom: var(--spacing-xs);
+  color: var(--color-text);
+}
+
+.tutorial-item textarea,
+.tutorial-item textarea[disabled] {
+  font-family: monospace;
+  font-size: var(--font-sm);
+  min-height: 80px;
+  resize: vertical;
 }
 
 /* Result item styling */
@@ -427,33 +517,82 @@ input[type="text"].form-control {
   color: var(--color-text);
 }
 
-/* Tutorial section */
-.toggle-tutorial {
+/* Expandable section (tutorial, etc.) */
+.expandable-section {
+  margin: var(--spacing-md) 0;
+}
+
+.expandable-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  color: var(--color-primary);
-  user-select: none;
+  font-size: var(--font-sm);
+  font-weight: 500;
+  color: var(--color-text);
+  transition: background-color 0.2s;
 }
 
-.toggle-tutorial:hover {
-  text-decoration: underline;
+.expandable-header:hover {
+  background: var(--color-btn-hover);
 }
 
-#tutorial {
-  margin-top: var(--spacing-md);
+.expandable-icon {
+  font-weight: bold;
+  font-size: var(--font-xl);
+  line-height: 1;
+  transition: transform 0.3s;
+}
+
+/* Expandable content */
+.expandable-content {
   padding: var(--spacing-md);
   background: var(--color-bg-secondary);
-  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  border-top: none;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
 }
 
-#tutorial p {
-  margin: var(--spacing-xs) 0;
+.expandable-content.hidden {
+  display: none;
 }
 
-#tutorial textarea {
+/* Tutorial grid layout */
+.tutorial-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+}
+
+.tutorial-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.tutorial-item.full-width {
+  grid-column: 1 / -1;
+}
+
+.tutorial-item label {
+  font-weight: 500;
+  margin-bottom: var(--spacing-xs);
+  color: var(--color-text);
+}
+
+.tutorial-item textarea {
   font-family: monospace;
   font-size: var(--font-sm);
-  width: 100%;
-  margin-top: 5px;
+  min-height: 80px;
+  resize: vertical;
+}
+
+.tutorial-item textarea[disabled] {
+  min-height: 80px;
 }
 
 /* Type selector styling */
