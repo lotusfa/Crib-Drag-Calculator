@@ -1,30 +1,30 @@
 // UI initialization and dark mode toggle
 
-// Dark mode toggle
+// Dark mode toggle - follows IPA project logic from ipa-core.js
 export function initDarkModeToggle() {
   const darkModeToggle = document.getElementById('dark-mode-toggle');
+  const iconImg = darkModeToggle.querySelector('.icon');
+  const savedTheme = localStorage.getItem('theme');
 
-  // Check for saved dark mode preference
-  const isDarkMode = localStorage.getItem('darkMode') === 'enabled';
-  if (isDarkMode) {
+  // Set initial state
+  if (savedTheme === 'dark') {
     document.body.classList.add('dark-mode');
-    // In dark mode, show light-mode icon (sun)
-    darkModeToggle.innerHTML = `<img src="./img/light-mode.svg" class="icon" alt="">`;
+    if (iconImg) iconImg.src = './img/dark-mode.svg';
+  } else {
+    if (iconImg) iconImg.src = './img/light-mode.svg';
   }
 
-  darkModeToggle.addEventListener('click', () => {
+  // Add click handler
+  darkModeToggle.addEventListener('click', function() {
+    darkModeToggle.classList.add('btn-theme-transition');
     document.body.classList.toggle('dark-mode');
     const isDark = document.body.classList.contains('dark-mode');
 
-    if (isDark) {
-      // Dark mode active - show light-mode icon (sun)
-      darkModeToggle.innerHTML = `<img src="./img/light-mode.svg" class="icon" alt="">`;
-      localStorage.setItem('darkMode', 'enabled');
-    } else {
-      // Light mode active - show dark-mode icon (moon)
-      darkModeToggle.innerHTML = `<img src="./img/dark-mode.svg" class="icon" alt="">`;
-      localStorage.setItem('darkMode', 'disabled');
+    if (iconImg) {
+      iconImg.src = isDark ? './img/dark-mode.svg' : './img/light-mode.svg';
     }
+
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
   });
 }
 

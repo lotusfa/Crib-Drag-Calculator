@@ -204,6 +204,10 @@ body.dark-mode h2 {
   display: block;
 }
 
+body.dark-mode .btn-theme .icon {
+  filter: invert(1);
+}
+
 hr {
   border: 0;
   border-top: 1px solid var(--color-border);
@@ -604,6 +608,75 @@ select.form-control {
   background: var(--color-input-bg);
   color: var(--color-text);
   cursor: pointer;
+}
+
+/* Character set row - inline layout for desktop */
+.char-set-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.char-set-row label {
+  font-weight: 500;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.char-set-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  flex: 1;
+  min-width: 200px;
+}
+
+.char-set-controls .inline-select {
+  flex-shrink: 0;
+}
+
+.char-set-controls .inline-select select {
+  padding: 6px 10px;
+  font-size: var(--font-sm);
+}
+
+.char-set-controls input[type="text"] {
+  flex: 1;
+  padding: 8px 10px;
+  font-size: var(--font-lg);
+  border: 1px solid var(--color-input-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-input-bg);
+  color: var(--color-text);
+}
+
+/* Mobile: stack vertically */
+@media (max-width: 600px) {
+  .char-set-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .char-set-row label {
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .char-set-controls {
+    flex-direction: column;
+  }
+
+  .char-set-controls .inline-select {
+    width: 100%;
+  }
+
+  .char-set-controls .inline-select select {
+    width: 100%;
+  }
+
+  .char-set-controls input[type="text"] {
+    width: 100%;
+  }
 }
 
 /* Footer - 3 column responsive layout */
