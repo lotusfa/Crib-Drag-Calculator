@@ -218,11 +218,17 @@ if (params.get('clear')) {
     showDocumentation(ct1 && ct2);
   } else {
     app.innerHTML = '<pre id="output" class="loading">Loading...</pre>';
-    await runAgent();
+    try {
+      const result = await runAgent();
+      const outputEl = document.getElementById('output');
+      outputEl.textContent = JSON.stringify(result, null, 2);
+    } catch (e) {
+      showError(e.message);
+    }
   }
 }
 
-async function runAgent() {
+function runAgent() {
   const cache = loadCache();
   const c1type = (params.get('c1type') ?? cache.c1type ?? 'hex').toLowerCase();
   const c2type = (params.get('c2type') ?? cache.c2type ?? 'hex').toLowerCase();
@@ -237,10 +243,10 @@ async function runAgent() {
   // Validate types
   const validTypes = ['hex', 'ascii', 'bin'];
   if (!validTypes.includes(c1type)) {
-    return showError(`Invalid c1type "${params.get('c1type')}". Valid: ${validTypes.join(', ')}`);
+    throw new Error(`Invalid c1type "${params.get('c1type')}". Valid: ${validTypes.join(', ')}`);
   }
   if (!validTypes.includes(c2type)) {
-    return showError(`Invalid c2type "${params.get('c2type')}". Valid: ${validTypes.join(', ')}`);
+    throw new Error(`Invalid c2type "${params.get('c2type')}". Valid: ${validTypes.join(', ')}`);
   }
 
   // Parse ciphertexts
@@ -248,10 +254,10 @@ async function runAgent() {
   const ct2Arr = parseCiphertext(ct2, c2type);
 
   if (ct1Arr.length === 0) {
-    return showError('Failed to parse ciphertext 1. Check the input and c1type.');
+    throw new Error('Failed to parse ciphertext 1. Check the input and c1type.');
   }
   if (ct2Arr.length === 0) {
-    return showError('Failed to parse ciphertext 2. Check the input and c2type.');
+    throw new Error('Failed to parse ciphertext 2. Check the input and c2type.');
   }
 
   // Compute XOR
@@ -260,10 +266,10 @@ async function runAgent() {
   // Parse crib
   const cribHexArr = asciiToHexArr(crib);
   if (cribHexArr.length === 0) {
-    return showError('Crib word cannot be empty.');
+    throw new Error('Crib word cannot be empty.');
   }
   if (cribHexArr.length > xorArr.length) {
-    return showError(`Crib length (${cribHexArr.length}) exceeds ciphertext XOR length (${xorArr.length}).`);
+    throw new Error(`Crib length (${cribHexArr.length}) exceeds ciphertext XOR length (${xorArr.length}).`);
   }
 
   // Slide crib across XOR
@@ -315,7 +321,7 @@ async function runAgent() {
     }
   };
 
-  document.getElementById('output').textContent = JSON.stringify(output, null, 2);
+  return output;
 }
 
 function showError(msg) {
@@ -351,7 +357,14 @@ ${cacheInfo}
 <p><b>Required Tooling</b> — use a browser-based tool like agent-browser or a headless engine (Playwright/Puppeteer) that executes JavaScript.</p>
 
 <h2>Usage</h2>
-<pre class="code-block">agent.html?ct1=&lt;ciphertext1&gt;&amp;ct2=&lt;ciphertext2&gt;&amp;crib=&lt;guess&gt;[&amp;c1type=hex]&amp;[&amp;c2type=hex]&amp;[&amp;charset=...]</pre>
+<pre class="code-block"># First call: set up ciphertexts + try a crib (auto-caches in localStorage)
+agent.html?ct1=&lt;ciphertext1&gt;&amp;ct2=&lt;ciphertext2&gt;&amp;crib=&lt;guess&gt;
+
+# Next calls: only crib needed (ct1/ct2 cached in browser)
+agent.html?crib=&lt;new_guess&gt;
+
+# Clear cached state
+agent.html?clear=1</pre>
 
 <h2>Parameters</h2>
 <table>
@@ -387,15 +400,17 @@ ${cacheInfo}
 </table>
 
 <h2>Example</h2>
-<pre class="code-block"># Step 1: Try a crib
+<pre class="code-block"># Step 1: Set up ciphertexts + try a crib (cached automatically)
 ?ct1=00736332696b&ct2=0f0f08474a5d&crib=hello
 
-# Step 2: Accept position 3, try new crib
-?ct1=00736332696b&ct2=0f0f08474a5d&crib=hello&accepted=3,hello,w9rlq
+# Step 2: Only crib needed — ct1/ct2 cached in localStorage
+?crib=world
 
-# Step 3: Try another crib with state preserved
-?ct1=00736332696b&ct2=0f0f08474a5d&crib=world&accepted=3,hello,w9rlq
-</pre>
+# Step 3: Accept a result, try another crib
+?crib=secret&accepted=0,hello,The%20p
+
+# Clear cached state when done
+?clear=1</pre>
 
 <h2>Notes</h2>
 <ul>

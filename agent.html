@@ -5,6 +5,11 @@
   AI agents: use agent-browser, Playwright, Puppeteer, or any headless browser.
   Fetching this HTML with curl/HTTP tools will NOT work — the page runs entirely client-side.
   See SKILL.md for usage instructions.
+
+  Usage:
+    First call:  ?ct1=HEX&ct2=HEX&crib=WORD   (caches ct1/ct2 in localStorage)
+    Next calls:  ?crib=NEW_WORD                 (only crib needed, ct1/ct2 cached)
+    Clear:       ?clear=1                       (wipes cached state)
 -->
 <head>
   <meta charset="UTF-8">
