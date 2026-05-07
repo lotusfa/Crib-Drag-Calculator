@@ -1,0 +1,8 @@
+body { font-family: system-ui, sans-serif; margin: 2rem; line-height: 1.6; }
+pre { white-space: pre-wrap; word-break: break-word; }
+.error { color: #c00; }
+table { border-collapse: collapse; }
+th, td { border: 1px solid #ddd; padding: 0.3rem 0.6rem; text-align: left; }
+th { background: #f8f8f8; }
+code { background: #f4f4f4; padding: 0.1rem 0.3rem; border-radius: 3px; }
+pre.code-block { background: #f4f4f4; padding: 1rem; border-radius: 4px; overflow-x: auto; }
