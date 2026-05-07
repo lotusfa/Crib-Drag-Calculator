@@ -86,6 +86,7 @@ Bash(agent-browser open "$URL?clear=1" && agent-browser wait --load networkidle)
 | `c1type` | No | Format of ct1: `hex` (default), `ascii`, `bin` |
 | `c2type` | No | Format of ct2: `hex` (default), `ascii`, `bin` |
 | `charset` | No | Allowed chars for filtering. Default: `a-zA-Z0-9.,?! :;'` |
+| `show_all` | No | `?show_all=1` to show ALL positions (default: only matching results) |
 | `accepted` | No | Accepted cribs: `index,crib,decrypted` (use `;` to separate) |
 | `accepted2` | No | Same format, for accepting from output2 side |
 | `clear` | No | `?clear=1` to wipe cached ciphertexts |
@@ -97,8 +98,8 @@ The page renders JSON in a `<pre>` element. Key fields:
 | Field | Description |
 |-------|-------------|
 | `status` | `"success"` or `"error"` |
-| `results[]` | All positions: `{position, decrypted, matches_charset}` |
-| `matching_results[]` | Positions where decrypted text is printable |
+| `results[]` | Matching positions by default. All positions with `?show_all=1`. Format: `{position, decrypted, matches_charset}` |
+| `matching_results[]` | Positions where decrypted text matches the charset |
 | `current_state.output1` | Partially decrypted output 1 (`.` = unknown) |
 | `current_state.output2` | Partially decrypted output 2 (`.` = unknown) |
 | `iteration.next_url` | URL for next round (just change crib= parameter) |
@@ -109,7 +110,8 @@ The page renders JSON in a `<pre>` element. Key fields:
 2. **Look at context**: If the task mentions a CTF flag, try `flag{`, `CTF{`, `FLAG{`
 3. **Use revealed text**: Once you see partial plaintext, use words from it to guide your next crib
 4. **Try longer cribs**: Once you know parts of both messages, try the full plaintext as a crib
-5. **Clear when done**: Use `?clear=1` to reset cached state between different problems
+5. **Filter reduces noise**: By default only matching results are returned. Use `?show_all=1` to see all positions. Customize allowed characters with `?charset=a-zA-Z`.
+6. **Clear when done**: Use `?clear=1` to reset cached state between different problems
 
 ## Notes
 

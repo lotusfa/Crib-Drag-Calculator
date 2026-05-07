@@ -233,9 +233,11 @@ function runAgent() {
   const c1type = (params.get('c1type') ?? cache.c1type ?? 'hex').toLowerCase();
   const c2type = (params.get('c2type') ?? cache.c2type ?? 'hex').toLowerCase();
   const charset = params.get('charset') ?? cache.charset ?? "a-zA-Z0-9.,?! :;'";
+  const showAll = params.get('show_all') === '1' || cache.showAll === '1';
   const accepted1 = parseAccepted(params.get('accepted') ?? cache.accepted);
   const accepted2 = parseAccepted(params.get('accepted2') ?? cache.accepted2);
 
+  const crib = params.get('crib');
   // Use cached ct/ct2 if not in URL
   const ct1 = params.get('ct1') ?? cache.ct1;
   const ct2 = params.get('ct2') ?? cache.ct2;
@@ -293,6 +295,8 @@ function runAgent() {
       c2type,
       crib,
       charset,
+      show_all: showAll,
+      filter_enabled: !showAll,
     },
     ciphertexts: {
       ct1_hex: ct1Arr.join(''),
@@ -305,10 +309,10 @@ function runAgent() {
       output1: states.output1,
       output2: states.output2,
     },
-    results: slideResults.map(r => ({
+    results: (showAll ? slideResults : filtered).map(r => ({
       position: r.position,
       decrypted: r.decrypted,
-      matches_charset: matchesCharset(r.decrypted, charset),
+      matches_charset: showAll ? matchesCharset(r.decrypted, charset) : true,
     })),
     matching_results: filtered.map(r => ({
       position: r.position,
@@ -317,7 +321,7 @@ function runAgent() {
     iteration: {
       cached: true,
       next_url: `${baseUrl}?crib=NEW_CRIB`,
-      description: `Ciphertexts cached in browser. Next round: only change crib= parameter. To accept position N: add accepted=N,crib,decrypted. Clear cache: ?clear=1`
+      description: `Ciphertexts cached in browser. Next round: only change crib= parameter. To accept position N: add accepted=N,crib,decrypted. Show all positions: &show_all=1. Clear cache: ?clear=1`
     }
   };
 
@@ -375,6 +379,7 @@ agent.html?clear=1</pre>
 <tr><td><code>c1type</code></td><td>No</td><td>Format of ct1: <code>hex</code> (default), <code>ascii</code>, <code>bin</code></td></tr>
 <tr><td><code>c2type</code></td><td>No</td><td>Format of ct2: <code>hex</code> (default), <code>ascii</code>, <code>bin</code></td></tr>
 <tr><td><code>charset</code></td><td>No</td><td>Allowed characters for filtering. Default: <code>a-zA-Z0-9.,?! :;'</code></td></tr>
+<tr><td><code>show_all</code></td><td>No</td><td><code>?show_all=1</code> to show ALL positions (default: only matching results)</td></tr>
 <tr><td><code>accepted</code></td><td>No</td><td>Accepted cribs for output1: <code>index,crib,decrypted</code> (use <code>;</code> to separate multiple)</td></tr>
 <tr><td><code>accepted2</code></td><td>No</td><td>Accepted cribs for output2: same format as <code>accepted</code></td></tr>
 </table>
