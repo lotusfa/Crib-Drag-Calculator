@@ -12,17 +12,29 @@ Solve OTP (One-Time Pad) crib drag attacks via a web interface. When the same on
 This page runs entirely client-side (JavaScript performs all XOR and crib analysis).
 **DO NOT** use curl, fetch, or any HTTP tool that doesn't execute JavaScript — you will only get an empty `<div id="app"></div>`.
 
-Use **agent-browser** (open, wait for load, extract text from `pre` element) or a headless browser (Playwright/Puppeteer).
-
-## Prerequisites
-
-**Required Tooling**
-
-To use this, you must use a browser-based tool like [agent-browser](https://github.com/anthropics/claude-code) or a headless engine (Playwright/Puppeteer) that executes JavaScript.
+Use **agent-browser** (see commands below). If you don't have it, see https://github.com/vercel-labs/agent-browser.
 
 ## Base URL
 
 [https://toolbox.lotusfa.com/crib-drag/agent.html](https://toolbox.lotusfa.com/crib-drag/agent.html)
+
+## Quick Start — Copy These Commands
+
+```bash
+# Round 1: Set up ciphertexts + try a crib (one Bash call)
+Bash(agent-browser open "URL?ct1=HEX1&ct2=HEX2&crib=hello" && agent-browser wait --load networkidle && agent-browser get text pre)
+
+# Round 2+: Only change crib (ciphertexts are cached in browser localStorage)
+Bash(agent-browser open "URL?crib=world" && agent-browser wait --load networkidle && agent-browser get text pre)
+
+# Accept a result at position N and try a new crib
+Bash(agent-browser open "URL?crib=newword&accepted=N,hello,decrypted_text" && agent-browser wait --load networkidle && agent-browser get text pre)
+
+# Clear cached ciphertexts when done
+Bash(agent-browser open "URL?clear=1" && agent-browser wait --load networkidle && agent-browser get text pre)
+```
+
+Replace `URL` with the base URL above. Each Bash call combines open + wait + extract in one command.
 
 ## How the Attack Works
 
@@ -33,50 +45,50 @@ To use this, you must use a browser-based tool like [agent-browser](https://gith
 
 ## Iterative Workflow
 
-This is an **iterative** tool — you must loop through crib guesses, building up known plaintext each round.
+This is an **iterative** tool — loop through crib guesses, building up known plaintext each round. The page caches `ct1`, `ct2`, and `accepted` state in localStorage, so after the first call you only need to pass `crib=WORD`.
 
 ### Step-by-Step
 
-1. **First request**: Navigate with `ct1`, `ct2`, and a crib guess. Parse the JSON output.
-2. **Find a match**: Look for `matching_results` where `decrypted` looks like valid text (English words, readable content).
-3. **Accept the result**: Add `accepted=position,crib,decrypted` to preserve state. Try a new crib.
-4. **Repeat**: Use `current_state.output1` and `current_state.output2` to see progress. Unknown bytes show as `.`.
+1. **First call**: Pass `ct1`, `ct2`, and a crib guess. The ciphertexts are cached automatically.
+2. **Read JSON output**: Look for `matching_results` where `decrypted` looks like valid text.
+3. **Next crib**: Just open `?crib=NEW_WORD` — no need to repeat ct1/ct2.
+4. **Accept a result**: Add `accepted=position,crib,decrypted` to track known plaintext.
+5. **Repeat** until `current_state.output1` and `current_state.output2` have no more `.` (unknown) characters.
 
 ### Example Session
 
 ```bash
-# Round 1: Try common word "the"
-agent-browser open "https://toolbox.lotusfa.com/crib-drag/agent.html?ct1=00736332696b&ct2=0f0f08474a5d&crib=the"
-agent-browser wait --load networkidle
-agent-browser get text pre  # Parse JSON output
+URL="https://toolbox.lotusfa.com/crib-drag/agent.html"
 
-# Found match at position 2: decrypted="hello"
-# Round 2: Accept that result, try "and"
-agent-browser open "https://toolbox.lotusfa.com/crib-drag/agent.html?ct1=00736332696b&ct2=0f0f08474a5d&crib=and&accepted=2,the,hello"
-agent-browser wait --load networkidle
-agent-browser get text pre
+# Round 1: Set up + try "hello"
+Bash(agent-browser open "$URL?ct1=3b101c091d53320c000910&ct2=071d154502010a04000419&crib=hello" && agent-browser wait --load networkidle && agent-browser get text pre)
+# Output: matching_results[0] = {position: 0, decrypted: "The p"}
 
-# Round 3: Use revealed plaintext to guide next crib...
-```
+# Round 2: Just try a new crib — ciphertexts cached
+Bash(agent-browser open "$URL?crib=World" && agent-browser wait --load networkidle && agent-browser get text pre)
+# Output: current_state shows output1="hello......" output2="The p......"
 
-### Using WebFetch
+# Round 3: Try full-length crib to solve
+Bash(agent-browser open "$URL?crib=Hello%20World" && agent-browser wait --load networkidle && agent-browser get text pre)
+# Output: position 0, decrypted="the program" — SOLVED!
 
-```
-WebFetch url="https://toolbox.lotusfa.com/crib-drag/agent.html?ct1=00736332696b&ct2=0f0f08474a5d&crib=hello" prompt="Extract the JSON output from the page. Focus on matching_results and current_state."
+# Clean up
+Bash(agent-browser open "$URL?clear=1" && agent-browser wait --load networkidle)
 ```
 
 ## URL Parameters
 
 | Param | Required | Description |
 |-------|----------|-------------|
-| `ct1` | Yes | First ciphertext |
-| `ct2` | Yes | Second ciphertext |
-| `crib` | Yes | Guessed plaintext word (ASCII, URL-encoded if needed) |
+| `ct1` | First call | First ciphertext (cached after first call) |
+| `ct2` | First call | Second ciphertext (cached after first call) |
+| `crib` | Every call | Guessed plaintext word (ASCII, URL-encoded if needed) |
 | `c1type` | No | Format of ct1: `hex` (default), `ascii`, `bin` |
 | `c2type` | No | Format of ct2: `hex` (default), `ascii`, `bin` |
 | `charset` | No | Allowed chars for filtering. Default: `a-zA-Z0-9.,?! :;'` |
-| `accepted` | No | Accepted cribs for output1: `index,crib,decrypted` (use `;` to separate multiple) |
-| `accepted2` | No | Accepted cribs for output2: same format as `accepted` |
+| `accepted` | No | Accepted cribs: `index,crib,decrypted` (use `;` to separate) |
+| `accepted2` | No | Same format, for accepting from output2 side |
+| `clear` | No | `?clear=1` to wipe cached ciphertexts |
 
 ## Output JSON
 
@@ -85,32 +97,21 @@ The page renders JSON in a `<pre>` element. Key fields:
 | Field | Description |
 |-------|-------------|
 | `status` | `"success"` or `"error"` |
-| `xor_hex` | XOR of the two ciphertexts (hex string) |
 | `results[]` | All positions: `{position, decrypted, matches_charset}` |
-| `matching_results[]` | Positions where decrypted text matches the charset |
+| `matching_results[]` | Positions where decrypted text is printable |
 | `current_state.output1` | Partially decrypted output 1 (`.` = unknown) |
 | `current_state.output2` | Partially decrypted output 2 (`.` = unknown) |
-| `iteration.next_url_template` | URL template for next iteration with state preserved |
-| `iteration.description` | Instructions for the next step |
+| `iteration.next_url` | URL for next round (just change crib= parameter) |
 
 ## Agent Strategy Tips
 
 1. **Start with common words**: `the`, `and`, `hello`, `password`, `flag`, `secret`
 2. **Look at context**: If the task mentions a CTF flag, try `flag{`, `CTF{`, `FLAG{`
 3. **Use revealed text**: Once you see partial plaintext, use words from it to guide your next crib
-4. **Check both outputs**: A match on output2 might reveal a word you can use as a crib for output1
-5. **Adjust charset**: If you expect numbers/special chars, expand the charset parameter
-6. **Track state**: Always carry forward `accepted` params to preserve known plaintext
-
-## Examples
-
-- [Basic hex XOR](https://toolbox.lotusfa.com/crib-drag/agent.html?ct1=00736332696b&ct2=0f0f08474a5d&crib=hello)
-- [ASCII input](https://toolbox.lotusfa.com/crib-drag/agent.html?ct1=abc&ct2=xyz&c1type=ascii&c2type=ascii&crib=test)
-- [With accepted state](https://toolbox.lotusfa.com/crib-drag/agent.html?ct1=00736332696b&ct2=0f0f08474a5d&crib=world&accepted=0,hello,decrypted)
-- [Documentation page](https://toolbox.lotusfa.com/crib-drag/agent.html) (no params)
+4. **Try longer cribs**: Once you know parts of both messages, try the full plaintext as a crib
+5. **Clear when done**: Use `?clear=1` to reset cached state between different problems
 
 ## Notes
 
-- Visit [without parameters](https://toolbox.lotusfa.com/crib-drag/agent.html) to see the full documentation page.
-- Non-ASCII crib input must be URL-encoded.
+- Ciphertexts are cached in browser localStorage — after the first call, only `crib=WORD` is needed.
 - This solves "reuse two" attacks (two ciphertexts, same key). For three+ ciphertexts, solve pairs independently.

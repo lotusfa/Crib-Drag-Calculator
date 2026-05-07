@@ -167,28 +167,72 @@ function escapeHtml(text) {
 }
 
 // ============================================
+// localStorage — cache inputs across iterations
+// ============================================
+
+const STORAGE_KEY = 'crib-drag-cache';
+
+function loadCache() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
+}
+
+function saveCache(data) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch {}
+}
+
+function clearCache() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch {}
+}
+
+// ============================================
 // Main entry — parse URL params and run
 // ============================================
 
 const params = new URLSearchParams(window.location.search);
 
-const ct1 = params.get('ct1');
-const ct2 = params.get('ct2');
-const crib = params.get('crib');
-
-if (!ct1 || ct2 === null || !crib) {
-  showDocumentation();
+// Clear cache if requested
+if (params.get('clear')) {
+  clearCache();
+  showCleared();
 } else {
-  app.innerHTML = '<pre id="output" class="loading">Loading...</pre>';
-  await runAgent();
+  // Merge: URL params override cached values
+  const cache = loadCache();
+  const ct1 = params.get('ct1') ?? cache.ct1 ?? null;
+  const ct2 = params.get('ct2') ?? cache.ct2 ?? null;
+  const crib = params.get('crib');
+
+  if (params.get('ct1') !== null || params.get('ct2') !== null) {
+    // Save/update cache from URL params
+    saveCache({
+      ct1: params.get('ct1') ?? cache.ct1,
+      ct2: params.get('ct2') ?? cache.ct2,
+      c1type: (params.get('c1type') ?? cache.c1type ?? 'hex').toLowerCase(),
+      c2type: (params.get('c2type') ?? cache.c2type ?? 'hex').toLowerCase(),
+      charset: params.get('charset') ?? cache.charset ?? "a-zA-Z0-9.,?! :;'",
+      accepted: params.get('accepted') ?? cache.accepted,
+      accepted2: params.get('accepted2') ?? cache.accepted2,
+    });
+  }
+
+  if (!ct1 || !ct2 || !crib) {
+    showDocumentation(ct1 && ct2);
+  } else {
+    app.innerHTML = '<pre id="output" class="loading">Loading...</pre>';
+    await runAgent();
+  }
 }
 
 async function runAgent() {
-  const c1type = (params.get('c1type') || 'hex').toLowerCase();
-  const c2type = (params.get('c2type') || 'hex').toLowerCase();
-  const charset = params.get('charset') || "a-zA-Z0-9.,?! :;'";
-  const accepted1 = parseAccepted(params.get('accepted'));
-  const accepted2 = parseAccepted(params.get('accepted2'));
+  const cache = loadCache();
+  const c1type = (params.get('c1type') ?? cache.c1type ?? 'hex').toLowerCase();
+  const c2type = (params.get('c2type') ?? cache.c2type ?? 'hex').toLowerCase();
+  const charset = params.get('charset') ?? cache.charset ?? "a-zA-Z0-9.,?! :;'";
+  const accepted1 = parseAccepted(params.get('accepted') ?? cache.accepted);
+  const accepted2 = parseAccepted(params.get('accepted2') ?? cache.accepted2);
+
+  // Use cached ct/ct2 if not in URL
+  const ct1 = params.get('ct1') ?? cache.ct1;
+  const ct2 = params.get('ct2') ?? cache.ct2;
 
   // Validate types
   const validTypes = ['hex', 'ascii', 'bin'];
@@ -231,13 +275,8 @@ async function runAgent() {
   // Compute current state from accepted results
   const states = computeStates(ct1Arr.length, ct2Arr.length, accepted1, accepted2);
 
-  // Build next-iteration URL
+  // Build next-iteration URL (short — ciphertexts cached in localStorage)
   const baseUrl = window.location.origin + window.location.pathname;
-  const nextParams = new URLSearchParams({
-    ct1, ct2, c1type, c2type,
-  });
-  if (accepted1.length > 0) nextParams.set('accepted', accepted1.map(a => `${a.index},${a.crib},${a.decrypted}`).join(';'));
-  if (accepted2.length > 0) nextParams.set('accepted2', accepted2.map(a => `${a.index},${a.crib},${a.decrypted}`).join(';'));
 
   // Build output JSON
   const output = {
@@ -270,10 +309,9 @@ async function runAgent() {
       decrypted: r.decrypted,
     })),
     iteration: {
-      accepted1,
-      accepted2,
-      next_url_template: `${baseUrl}?${nextParams.toString()}&crib=NEW_CRIB`,
-      description: `Replace NEW_CRIB with your next guess. To accept result at position N, add accepted=N,crib,decrypted to the URL.`
+      cached: true,
+      next_url: `${baseUrl}?crib=NEW_CRIB`,
+      description: `Ciphertexts cached in browser. Next round: only change crib= parameter. To accept position N: add accepted=N,crib,decrypted. Clear cache: ?clear=1`
     }
   };
 
@@ -289,15 +327,25 @@ function showError(msg) {
   app.innerHTML = `<pre class="error">${escapeHtml(JSON.stringify(output, null, 2))}</pre>`;
 }
 
+function showCleared() {
+  app.innerHTML = `<pre>Cleared. Ready for new ciphertexts.\nUsage: ?ct1=...&amp;ct2=...&amp;crib=WORD</pre>`;
+}
+
 // ============================================
 // Documentation Mode (no params)
 // ============================================
 
-function showDocumentation() {
+function showDocumentation(hasCache) {
+  const cache = loadCache();
+  const hasCt = cache.ct1 && cache.ct2;
+  const cacheInfo = hasCt ? `<pre class="code-block">Cached: ct1=${escapeHtml(cache.ct1)}  ct2=${escapeHtml(cache.ct2)}\nNext: just add &amp;crib=WORD to try a guess.\nClear: ?clear=1</pre>` : '';
+
   app.innerHTML = `<div class="doc">
 <h1>Crib Drag Calculator — Agent Interface</h1>
 <p>Solve OTP (One-Time Pad) crib drag attacks via URL parameters. Outputs JSON for agent consumption.</p>
 <p><a href="SKILL.md">SKILL.md</a> — Agent usage guide (copy to your skill folder)</p>
+
+${cacheInfo}
 
 <h2>Prerequisites</h2>
 <p><b>Required Tooling</b> — use a browser-based tool like agent-browser or a headless engine (Playwright/Puppeteer) that executes JavaScript.</p>
